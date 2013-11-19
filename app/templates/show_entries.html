@@ -3,21 +3,18 @@
   <!-- Consider moving this to layout.html -->
   <script src="static/jquery-1.9.1.js" type="text/javascript"></script>
   <script>
-      function sendRequest(vote) {
-          alert($.ajax)
+      function sendRequest(id, vote) {
         $.ajax({
           type: "POST",
-          url: ".",
-          data: 'upvote:'+vote,
+          url: id,
+          data: {upvote: vote },
           cache: false,
-          success: 1
+          success: function(data) {
+            {# alert(data); #}
+          }
         });
       } 
-
-    console.log($("#upvote").html);
-
   </script>
-
 
   <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
     <dl>
@@ -29,8 +26,20 @@
   <ul class=entries>
       {% for confession in confessions %}
         <li><h2>{{ confession.id}}</h2>{{ confession.confession|safe }}
-        <a href="{{ url_for('downvote') }}/{{ confession.confession_id}}/" id="downvote">-</a>
-        <a href="{{ url_for('upvote') }}/{{ confession.confession_id}}/" id="upvote">+</a>
+        <a href="" id="downvote_{{ confession.id }}">-</a>
+        <a href="" id="upvote_{{ confession.id }}">+</a>
+        <script>
+          $( document ).ready(function() {
+              $( "#upvote_{{ confession.id }}" ).click(function() {
+                  sendRequest({{ confession.id }}, 1);
+                  return false;
+                });
+                $( "#downvote_{{ confession.id }}" ).click(function() {
+                  sendRequest({{ confession.id }}, 0);
+                  return false;
+                });
+            });
+        </script>
       {% else %}
         <li><em>No confessions here so far</em>
       {% endfor %}
