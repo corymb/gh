@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+  <!-- Consider moving this to layout.html -->
+  <script src="static/jquery-1.9.1.js" type="text/javascript"></script>
+  <script>
+      function sendRequest(vote) {
+          alert($.ajax)
+        $.ajax({
+          type: "POST",
+          url: ".",
+          data: 'upvote:'+vote,
+          cache: false,
+          success: 1
+        });
+      } 
+
+    console.log($("#upvote").html);
+
+  </script>
+
+
+  <form action="{{ url_for('add_entry') }}" method=post class=add-entry>
+    <dl>
+      <dt>Confession:
+      <dd><textarea name="confession" rows=5 cols=40></textarea>
+      <dd><input type=submit value=Share>
+    </dl>
+  </form>
+  <ul class=entries>
+      {% for confession in confessions %}
+        <li><h2>{{ confession.id}}</h2>{{ confession.confession|safe }}
+        <a href="{{ url_for('downvote') }}/{{ confession.confession_id}}/" id="downvote">-</a>
+        <a href="{{ url_for('upvote') }}/{{ confession.confession_id}}/" id="upvote">+</a>
+      {% else %}
+        <li><em>No confessions here so far</em>
+      {% endfor %}
+  </ul>
+{% endblock %}
