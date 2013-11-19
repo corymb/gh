@@ -1,5 +1,5 @@
 from flask import flash, render_template, redirect, request, url_for
-from app import app, db
+from app import app
 
 from app.models import Confession
 
@@ -20,11 +20,12 @@ def show_confession(confession_id):
             confession.upvote()
         else:
             confession.downvote()
-        return u'%s' % confession.score
+        return u'%s, %s' % (confession.id, confession.score)
 
     # Template re-use requires an iterable:
     confession = confession,
     return render_template('show_entries.html', confessions=confession)
+
 
 @app.route('/add/', methods=['POST'])
 def add_entry():
@@ -32,13 +33,3 @@ def add_entry():
     confession.store_confession()
     flash('Your confession has been posted and is pending approval')
     return redirect(url_for('show_confessions'))
-
-
-@app.route('/downvote/')
-def upvote():
-    pass
-
-
-@app.route('/upvote/')
-def downvote():
-    pass
